@@ -224,7 +224,7 @@ bool fe_evaluate(Organism *org) {
 
 
 std::pair<bool, int> simulategame(Network *net) {
-    string path = "/home/avs/projects/evolutionary/project/Finalfastecslent/NEAT/";
+    string path = "/home/daniel/CS776/FEGA/FEGA/";
     exportNetworkToFile(path + "networkconf", net);
 
     system( (path +"sim.sh").c_str());
