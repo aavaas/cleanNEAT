@@ -1,0 +1,16 @@
+enum nodetype {
+	NEURON = 0,
+	SENSOR = 1
+};
+
+enum nodeplace {
+	HIDDEN = 0,
+	INPUT = 1,
+	OUTPUT = 2,
+	BIAS = 3
+};
+
+node_id >> traitnum >> nodetype >> nodeplace;
+
+traitnum >> inodenum >> onodenum >> weight >> recur >> innovation_num >> mutation_num >> enable;
+
