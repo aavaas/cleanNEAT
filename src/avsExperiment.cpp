@@ -198,7 +198,7 @@ int fe_epoch(Population *pop, int generation, char *filename, int &winnernum, in
 bool fe_evaluate(Organism *org) {
 
     bool success;  //Check for successful run
-    int maxfitness = 8000;
+    int maxfitness = 3020 * 4;
 
     std::pair<bool, int> out = simulategame(org->net);
 
@@ -210,7 +210,7 @@ bool fe_evaluate(Organism *org) {
         org->fitness = 0.001;
         org->error = maxfitness;
     }
-    cout << "Org " << (org->gnome)->genome_id << "fitness: " << org->fitness << endl;
+    cout << "Org " << (org->gnome)->genome_id << "Total fitness: " << org->fitness << endl;
 
     if (out.second >= maxfitness) {
         org->winner = true;
@@ -223,25 +223,38 @@ bool fe_evaluate(Organism *org) {
 }
 
 
+
+void exportGameParamsToFile(const std::string filename, int pos) {
+    std::ofstream outFile(filename);
+    outFile << "3 2 2000 0 0 "<< pos << std::endl;
+    outFile.close();
+}
+
 std::pair<bool, int> simulategame(Network *net) {
     string path = "/home/daniel/CS776/FEGA/FEGA/";
     exportNetworkToFile(path + "networkconf", net);
 
-    system( (path +"sim.sh").c_str());
-
     bool success = true;
+    int totalfitness = 0;
 
-    ifstream infile(path+"outfitness", ios::in);
-    std::string line;
-    int a;
-    if (!std::getline(infile, line)) {
-        success = false;
-        std::cout << "problem while reading fitness" << std::endl;
+    for (int i = 0; i<8;i=i+2){
+        //positions 0,2,4 and 6
+        exportGameParamsToFile(path + "gameparams", i);
+        system((path + "sim.sh").c_str());
+        ifstream infile(path + "outfitness", ios::in);
+        std::string line;
+        int a;
+        if (!std::getline(infile, line)) {
+            success = false;
+            std::cout << "problem while reading fitness" << std::endl;
+        }
+        std::istringstream iss(line);
+        iss >> a;
+        std::cout << "infile fitness: " << a << std::endl;
+        totalfitness += a;
+        infile.close();
     }
-    std::istringstream iss(line);
-    iss >> a;
 
-    std::cout << "infile fitness: " << a << std::endl;
-    infile.close();
-    return {success, a};
+
+    return {success, totalfitness};
 }

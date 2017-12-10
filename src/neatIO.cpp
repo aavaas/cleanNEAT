@@ -34,7 +34,7 @@ void exportNetworkToFile(std::string filename, Network *net) {
     outFile << net->all_nodes.size() << std::endl;
 
     for (auto nodes: net->all_nodes) {
-        outFile << nodes->node_id << " " << nodes->gen_node_label << std::endl;
+        outFile << nodes->node_id << " " << (nodes->gen_node_label == 3 ? 1 : nodes->gen_node_label) << std::endl;
 
         for (auto inLinks : nodes->incoming) {
             if (!hasLink(inLinks, links)) {
